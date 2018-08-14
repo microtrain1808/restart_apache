@@ -9,12 +9,19 @@ then
     exit 1
 fi
 
-cd /etc/apache2/sites-available
+if [ "$COMMAND" == "reload" ] || [ "$COMMAND" == "restart" ]
+then
+    cd /etc/apache2/sites-available
 
-# Disable VHOSTS
-sudo a2dissite "$CONFIG"
-sudo systemctl "$COMMAND" apache2
+    # Disable VHOSTS
+    sudo a2dissite "$CONFIG"
+    sudo systemctl "$COMMAND" apache2
 
-# Enable VHOSTS
-sudo a2ensite "$CONFIG"
-sudo systemctl "$COMMAND" apache2
+    # Enable VHOSTS
+    sudo a2ensite "$CONFIG"
+    sudo systemctl "$COMMAND" apache2
+else
+    echo "ERROR: $COMMAND is not a valid systemctl command {reload|restart}"
+    exit 1
+fi
+
